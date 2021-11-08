@@ -1,0 +1,29 @@
+importar  'refletir-metadados'
+importar  {  resolver  }  de  'caminho'
+importar  {  createExpressServer ,  useContainer  }  de  'controladores de roteamento'
+importar  {  container  }  de  'tsyringe'
+
+importar  configuração  de  './config/Config'
+importar  configDI  de  './config/DI'
+importar  {  MongoDB  }  de  './config/MongoDB'
+
+( assíncrono  ( )  =>  {
+  const  db  =  ( aguarda  MongoDB . createConnection ( ) ) . db
+
+  configDI ( db )
+
+  useContainer ( {
+    get : container . resolver . vincular ( recipiente )
+  } )
+
+  const  app  =  createExpressServer ( {
+    cors : verdade ,
+    classTransformer : true ,
+    controladores : [
+      resolver ( __dirname ,  'controladores /*.*' )
+    ]
+  } )
+
+  app . ouvir ( config . ServerPort )
+  console . log ( `Ouvindo na porta: $ { config . ServerPort } ` )
+} ) ( )
